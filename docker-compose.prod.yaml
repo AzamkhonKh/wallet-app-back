@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  db:
+    container_name: wallet_db_prod
+    ports: [] # Do not expose DB port directly to the host in production unless necessary
+
+  app:
+    container_name: wallet_app_prod
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      # Override JWT secret and DB password with more secure values from env vars
+      # Ensure these are set in the deployment environment where docker-compose runs
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - APP_JWT_SECRET=${JWT_SECRET}
+    ports:
+      # Map application port. Consider using a reverse proxy (like Nginx) in front.
+      - "8080:8080" # Or map 80:8080 if desired
+    restart: unless-stopped # Ensure the app restarts if it crashes or server reboots
+
+networks:
+  wallet-net:
+
+volumes:
+  wallet_db_data:

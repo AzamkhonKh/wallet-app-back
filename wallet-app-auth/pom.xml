@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.example.wallet</groupId>
+        <artifactId>wallet-app-parent</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <artifactId>wallet-app-auth</artifactId>
+    <name>wallet-app-auth</name>
+    <description>Module for Authentication domain, repository, and UserDetailsService</description> <!-- Updated description -->
+
+    <dependencies>
+        <!-- === Required Dependencies for Auth Module === -->
+
+        <!-- Spring Data JPA (for @Entity, @Id, JpaRepository, @Transactional, Hibernate
+        annotations) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <!-- Bean Validation API (for @NotBlank, @Email, @Size etc.) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <!-- Spring Security Core (for UserDetails, GrantedAuthority, PasswordEncoder *interface*) -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+        </dependency>
+
+        <!-- Spring Context (Needed for @Service, @Repository, @Component, @Configuration implicitly
+        by starters) -->
+        <!-- Often included transitively by starters like data-jpa, but can be added explicitly if
+        needed -->
+        
+        <!-- Lombok (for annotations like @Getter, @Setter, @Builder etc.) -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Project Common Module -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>wallet-app-common</artifactId>
+        </dependency>
+
+        <!-- Database Driver -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- === Test Dependencies === -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Flyway (Only if this module OWNS the schema migrations for 'users' table) -->
+        <!-- Usually, schema migrations are kept together, e.g., in 'core' or a dedicated 'db'
+        module -->
+        <!--
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-database-postgresql</artifactId>
+            <version>${flyway.version}</version>
+        </dependency>
+        -->
+    </dependencies>
+</project>

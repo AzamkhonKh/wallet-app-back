@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: wallet_app_dev
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      # Enable Spring Boot DevTools remote debug server (optional, if using devtools)
+      # - SPRING_DEVTOOLS_REMOTE_SECRET=your_dev_secret # Set a secret if needed
+      # For standard Java debugging:
+      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+    ports:
+      # Expose debug port
+      - "5005:5005"
+    # Note: For true live reload with Docker, you'd typically need Spring Boot DevTools
+    # configured for remote usage, or tools like JRebel/DCEVM.
+    # Without them, you'll need to rebuild the image (`docker-compose build app`)
+    # and restart (`docker-compose up -d`) after code changes.
+    # Volume mounting source code is less useful here unless using specific live-reload tools
+    # because the code is compiled into the JAR inside the Dockerfile.
+    # If using devtools triggered restarts on file changes, mounting target/classes might work:
+    # volumes:
+    #   - ./wallet-app-api/target/classes:/app/BOOT-INF/classes # Example, path might vary
+
+networks:
+  wallet-net:
+
+volumes:
+  wallet_db_data:

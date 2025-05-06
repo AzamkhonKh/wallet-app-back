@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <!-- Use Spring Boot Starter Parent for managed dependency versions -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.2.0</version>
+        <relativePath /> <!-- lookup parent from repository -->
+    </parent>
+
+    <groupId>com.example.wallet</groupId>
+    <artifactId>wallet-app-parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>wallet-app-parent</name>
+    <description>Parent project for the Wallet App</description>
+
+    <modules>
+        <module>wallet-app-api</module>
+        <module>wallet-app-auth</module>
+        <module>wallet-app-core</module>
+        <module>wallet-app-common</module>
+    </modules>
+
+    <properties>
+        <java.version>17</java.version>
+        <springdoc-openapi.version>2.3.0</springdoc-openapi.version>
+        <!-- Define other common library versions here -->
+        <jjwt.version>0.11.5</jjwt.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <!-- Manage versions of our own modules -->
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>wallet-app-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>wallet-app-auth</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>wallet-app-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>wallet-app-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <!-- Manage versions of external libraries -->
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+                <version>${springdoc-openapi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-api</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-impl</artifactId>
+                <version>${jjwt.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-jackson</artifactId>
+                <version>${jjwt.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+
+            <!-- Add your dependencies here -->
+            <dependency>
+                <groupId>org.hibernate.orm</groupId>
+                <artifactId>hibernate-core</artifactId>
+                <version>6.2.6.Final</version> <!-- Use the latest version -->
+            </dependency>
+            <!-- Add dependencies here -->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>6.1.1</version>
+
+            </dependency>
+            <!-- Add other managed dependencies here -->
+
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <!-- Version often inherited from Spring Boot parent -->
+
+                    <!-- <version>3.11.0</version> -->
+                    <configuration>
+                        <annotationProcessorPaths>
+                            <path>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                                <!-- Use the version managed by Spring Boot parent -->
+                                <version>${lombok.version}</version>
+                            </path>
+                            <!-- Add other annotation processors if needed, e.g., mapstruct -->
+                        </annotationProcessorPaths>
+                        <!-- Ensure correct Java version if not using toolchains -->
+                        <!-- <source>${java.version}</source> -->
+                        <!-- <target>${java.version}</target> -->
+                    </configuration>
+                </plugin>
+                <!-- Other plugins like spring-boot-maven-plugin -->
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <!-- Version managed by spring-boot-starter-parent -->
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+</project>

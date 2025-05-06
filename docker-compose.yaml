@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15 # Use a specific version
+    container_name: wallet_db
+    environment:
+      POSTGRES_DB: ${DB_NAME:-walletdb}
+      POSTGRES_USER: ${DB_USER:-walletuser}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme_in_prod_and_local_env} # Read from .env
+    volumes:
+      - wallet_db_data:/var/lib/postgresql/data # Persist data
+    ports:
+      - "${DB_PORT:-5432}:5432" # Map DB port for external access if needed (e.g., for local dev tools)
+    healthcheck:
+        test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-walletuser} -d ${DB_NAME:-walletdb}"]
+        interval: 10s
+        timeout: 5s
+        retries: 5
+    networks:
+      - wallet-net
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: wallet_app
+    environment:
+      # Read from .env file, providing defaults
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://${DB_HOST:-db}:${DB_PORT:-5432}/${DB_NAME:-walletdb}
+      - SPRING_DATASOURCE_USERNAME=${DB_USER:-walletuser}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD:-changeme_in_prod_and_local_env}
+      - APP_JWT_SECRET=${JWT_SECRET:-changeme_very_strong_secret_please}
+      - APP_JWT_ISSUER=${JWT_ISSUER:-my-wallet-app}
+      - APP_JWT_ACCESS_TOKEN_EXPIRATION_MS=${JWT_ACCESS_TOKEN_EXPIRATION_MS:-3600000}
+      - APP_JWT_REFRESH_TOKEN_EXPIRATION_MS=${JWT_REFRESH_TOKEN_EXPIRATION_MS:-604800000}
+      # Flyway location inside the container
+      - SPRING_FLYWAY_LOCATIONS=classpath:/db/migration
+    ports:
+      - "${SERVER_PORT:-8080}:8080"
+    depends_on:
+      db:
+        condition: service_healthy # Wait for DB to be ready
+    networks:
+      - wallet-net
+
+volumes:
+  wallet_db_data: # Define the named volume for DB persistence
+
+networks:
+  wallet-net:
+    driver: bridge
