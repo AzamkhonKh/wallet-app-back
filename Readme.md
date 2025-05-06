@@ -16,8 +16,8 @@ This project follows a **Modular Monolith** architecture. Core functionalities (
 
 ## Technology Stack
 
-* **Language:** Java 17 (or 21)
-* **Framework:** Spring Boot 3.x (WebFlux or MVC)
+* **Language:** Java 17
+* **Framework:** Spring Boot 3.x (MVC)
 * **Data Access:** Spring Data JPA (Hibernate), PostgreSQL
 * **Authentication:** Spring Security 6.x, JWT
 * **Database Migration:** Flyway
@@ -45,7 +45,7 @@ wallet-app/
 
 ## Prerequisites
 
-* **Java JDK:** Version 17 or 21 (Check `pom.xml`)
+* **Java JDK:** Version 17
 * **Maven:** Version 3.6+
 * **Docker:** Latest stable version
 * **Docker Compose:** Latest stable version (usually included with Docker Desktop)
@@ -55,7 +55,7 @@ wallet-app/
 1. **Clone the repository:**
 
     ```bash
-    git clone <your-repository-url>
+    git clone https://github.com/AzamkhonKh/wallet-app-back.git
     cd wallet-app
     ```
 
@@ -65,9 +65,6 @@ wallet-app/
         ```bash
         cp .env.example .env
         ```
-
-        *(If you didn't create `.env.example`, copy `.env` directly if it exists as a template, BUT ensure the actual `.env` with secrets is in `.gitignore`)*
-    * Edit the `.env` file and set your database credentials (`DB_USER`, `DB_PASSWORD`), JWT secret (`JWT_SECRET`), and other configurations as needed. **Use strong, unique values, especially for production secrets.**
 
 ## Running the Application
 
@@ -117,7 +114,7 @@ This runs the application using production settings. **Ensure your `.env` file o
     docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --build -d
     ```
 
-* The application will be available at `http://<your-server-ip>:8080`.
+* The application will be available at `http://<your-server-ip>:8080`
 * To stop: `docker-compose -f docker-compose.yml -f docker-compose.prod.yml down`
 
 ## API Documentation
@@ -136,19 +133,4 @@ Run unit and integration tests using Maven:
 
 ```bash
 mvn test
-Use code with caution.
 ```
-
-**Explanation and Next Steps:**
-
-1. **Environment Variables:** The `.env` file is central. Make sure it's correctly populated for local use and **NEVER** commit it to Git if it contains real secrets. For production, use environment variables injected by your deployment system or a secrets manager.
-2. **Docker Build Context:** The `.dockerignore` file is important to keep your build context small and build times faster.
-3. **Multi-Stage Build:** The `Dockerfile` builds the JAR in a temporary JDK image and then copies *only* the JAR and necessary resources (like Flyway migrations) into a smaller JRE image for the final stage.
-4. **Docker Compose Overrides:** Using `-f docker-compose.yml -f docker-compose.dev.yml` (or `.prod.yml`) merges the files, with the latter file overriding settings in the base file. This keeps configurations DRY (Don't Repeat Yourself).
-5. **Database Persistence:** The `wallet_db_data` named volume ensures your PostgreSQL data persists even if you remove and recreate the database container.
-6. **Networking:** Services within the same `docker-compose.yml` file (and its overrides) are automatically placed on a shared network (`wallet-net` in this case), allowing the `app` container to reach the `db` container using its service name (`db`) as the hostname.
-7. **Development Workflow:** For code changes in development with Docker, you'll typically need to rebuild the image (`docker-compose build app`) and restart the services (`docker-compose up -d`) unless you integrate live reload tools like Spring Boot DevTools configured for remote usage. Simple debugging via the exposed port `5005` is often sufficient.
-8. **Production Deployment:** The `docker-compose.prod.yml` provides a basic production setup. For real-world deployments, consider:
-    * A reverse proxy (Nginx, Traefik) in front of the application for TLS termination, load balancing, etc.
-    * Proper secrets management (Vault, AWS Secrets Manager, etc.) instead of relying solely on `.env` files on the server.
-    * Centralized logging and monitoring solutions.
